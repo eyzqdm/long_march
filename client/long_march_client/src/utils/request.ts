@@ -42,7 +42,7 @@ service.interceptors.response.use(
         const res = response.data;
 
         // 如果状态码不是20000则认为有错误
-        if (res.code !== 20000) {
+        if (res.code !== 200) {
             message.error({
                 message: res.message || "Error",
                 duration: 5 * 1000,
@@ -51,15 +51,15 @@ service.interceptors.response.use(
             // 50008: 非法令牌; 50012: 其他客户端已登入; 50014: 令牌过期;
             if (res.code === 50008 || res.code === 50012 || res.code === 50014) {
                 // 重新登录
-               /*  Msgbox.confirm("您已登出, 请重新登录", "确认", {
-                    confirmButtonText: "重新登录",
-                    cancelButtonText: "取消",
-                    type: "warning",
-                }).then(() => {
-                    store.dispatch("user/resetToken").then(() => {
-                        location.reload();
-                    });
-                }); */
+                /*  Msgbox.confirm("您已登出, 请重新登录", "确认", {
+                     confirmButtonText: "重新登录",
+                     cancelButtonText: "取消",
+                     type: "warning",
+                 }).then(() => {
+                     store.dispatch("user/resetToken").then(() => {
+                         location.reload();
+                     });
+                 }); */
             }
             return Promise.reject(new Error(res.message || "Error"));
         } else {
@@ -68,13 +68,30 @@ service.interceptors.response.use(
     },
     (error) => {
         console.log("err" + error); // for debug
-       /*  essage({
-            message: error.message,
-            type: "error",
-            duration: 5 * 1000,
-        }); */
+        /*  essage({
+             message: error.message,
+             type: "error",
+             duration: 5 * 1000,
+         }); */
         return Promise.reject(error);
     }
 );
+export function request(data:any) {
+    return axios(data)
+}
+export function get(url:string, params:any) {
+    return request({
+        url: url,
+        params: params,
+        method: 'get'
+    })
+}
 
+export function post(url:string, params:any) {
+    return request({
+        url: url,
+        data: params,
+        method: 'post'
+    })
+}
 export default service;
