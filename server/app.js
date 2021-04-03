@@ -2,7 +2,8 @@ const Koa = require("koa");
 const Router = require("koa-router");
 const app = new Koa();
 const router = new Router();
-
+const session = require("koa-generic-session");
+const redisStore = require("koa-redis");
 const views = require("koa-views");
 const co = require("co");
 const convert = require("koa-convert");
@@ -12,7 +13,8 @@ const bodyparser = require("koa-bodyparser");
 const logger = require("koa-logger");
 const debug = require("debug")("koa2:server");
 const path = require("path");
-
+const { REDIS_CONF } = require('./conf/db') // redis 端口配置
+const { SESSION_SECRET_KEY } = require('./conf/secretKeys')
 const config = require("./config");
 const routes = require("./routes");
 
@@ -36,6 +38,24 @@ app
   )
   .use(router.routes())
   .use(router.allowedMethods());
+
+// session 配置
+app.keys = [SESSION_SECRET_KEY];
+app.use(
+  session({
+    key: "weibo.sid", // cookie name 默认是 `koa.sid` 用户传过来的
+    prefix: "weibo:sess:", // redis key 的前缀，默认是 `koa:sess:`
+    cookie: {
+      path: "/", // 在任何目录下都能访问到cookie
+      httpOnly: true, // 只能在服务端修改 客户端无法修改
+      maxAge: 24 * 60 * 60 * 1000, // 单位 ms
+    },
+    // 把session的数据存到redis中
+    store: redisStore({
+      all: `${REDIS_CONF.host}:${REDIS_CONF.port}`,
+    }),
+  })
+);
 
 // logger
 app.use(async (ctx, next) => {
