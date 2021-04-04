@@ -4,10 +4,12 @@ import path from 'path'
 
 export default defineConfig({
   plugins: [vue()],
-  alias: {
-    "@": path.resolve(__dirname, "src"),
-    "comps": path.resolve(__dirname, "src/components"),
-    "type": path.resolve(__dirname, "src/types"),
-    "layout": path.resolve(__dirname, "src/layouts"),
-  },
+  resolve: {
+    alias: {
+      "@": path.resolve(__dirname, "src"),
+      "comps": path.resolve(__dirname, "src/components"),
+      "type": path.resolve(__dirname, "src/types"),
+      "layouts": path.resolve(__dirname, "src/layouts")
+    }
+  }
 })

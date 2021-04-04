@@ -13,8 +13,8 @@ const bodyparser = require("koa-bodyparser");
 const logger = require("koa-logger");
 const debug = require("debug")("koa2:server");
 const path = require("path");
-const { REDIS_CONF } = require('./conf/db') // redis 端口配置
-const { SESSION_SECRET_KEY } = require('./conf/secretKeys')
+const { REDIS_CONF } = require("./src/conf/db"); // redis 端口配置
+const { SESSION_SECRET_KEY } = require("./src/conf/secretKeys");
 const config = require("./config");
 const routes = require("./routes");
 
@@ -24,21 +24,19 @@ const port = process.env.PORT || config.port;
 onerror(app);
 
 // middlewares
-app
-  .use(bodyparser())
-  .use(json())
-  .use(logger())
-  .use(require("koa-static")(__dirname + "/public"))
-  .use(
-    views(path.join(__dirname, "/views"), {
-      options: { settings: { views: path.join(__dirname, "views") } },
-      map: { ejs: "ejs" },
-      extension: "ejs",
-    })
-  )
-  .use(router.routes())
-  .use(router.allowedMethods());
-
+app.use(async (ctx, next) => {
+  ctx.set("Access-Control-Allow-Origin", "*");
+  ctx.set(
+    "Access-Control-Allow-Headers",
+    "Content-Type, Content-Length, Authorization, Accept, X-Requested-With , yourHeaderFeild"
+  );
+  ctx.set("Access-Control-Allow-Methods", "PUT, POST, GET, DELETE, OPTIONS");
+  if (ctx.method == "OPTIONS") {
+    ctx.body = 200;
+  } else {
+    await next();
+  }
+});
 // session 配置
 app.keys = [SESSION_SECRET_KEY];
 app.use(
@@ -56,6 +54,20 @@ app.use(
     }),
   })
 );
+app
+  .use(bodyparser())
+  .use(json())
+  .use(logger())
+  .use(require("koa-static")(__dirname + "/public"))
+  .use(
+    views(path.join(__dirname, "/views"), {
+      options: { settings: { views: path.join(__dirname, "views") } },
+      map: { ejs: "ejs" },
+      extension: "ejs",
+    })
+  )
+  .use(router.routes())
+  .use(router.allowedMethods());
 
 // logger
 app.use(async (ctx, next) => {
@@ -73,8 +85,8 @@ router.get("/", async (ctx, next) => {
   await ctx.render("index", ctx.state);
 });
 
-router.get("/hello", async (ctx, next) => {
-  ctx.body = "Hello World";
+router.post("/login", async (ctx, next) => {
+  ctx.body = "login";
 });
 
 routes(router);
