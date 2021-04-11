@@ -1,11 +1,11 @@
 /**
  * @description sequelize 同步数据库
- * @author 双越老师
+ * @author eyz
  */
 
 const seq = require("./seq");
 
-// require('./model/index')
+require('./model/index')
 
 // 测试连接
 seq
@@ -13,6 +13,7 @@ seq
   .then(() => {
     console.log("auth ok");
   })
+  
   .catch(() => {
     console.log("auth err");
   });
