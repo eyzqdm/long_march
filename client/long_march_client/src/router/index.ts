@@ -8,8 +8,14 @@ export const routes = [
   },
   {
     path: "/login",
+    name:'login',
     component: Login,
   },
+  {
+    path: "/register",
+    name:'register',
+    component: ()=>import('views/Register.vue'),
+  }
 ];
 
 const router = createRouter({
