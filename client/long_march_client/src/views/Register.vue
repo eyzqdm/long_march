@@ -29,21 +29,18 @@
           html-type="submit"
           :disabled="formState.user === '' || formState.password === ''"
         >
-          登录
+          注册
         </a-button>
       </a-form-item>
     </a-form>
-    <div>
-      <a-checkbox v-model:checked="checked">记住我</a-checkbox>
-    </div>
-    <span class="jump_btn" @click="toRegister">没有账号？立即注册</span>
+    <span class="jump_btn" @click="toLogin">已有帐号？立即登录</span>
   </div>
 </template>
 <script lang="ts">
 import { UserOutlined, LockOutlined } from "@ant-design/icons-vue";
 import { ValidateErrorEntity } from "ant-design-vue/es/form/interface";
-import { defineComponent, reactive, UnwrapRef, ref } from "vue";
 import { useRouter } from "vue-router";
+import { defineComponent, reactive, UnwrapRef } from "vue";
 import { userMsg } from "type/login";
 import LoginApi from "api/login";
 
@@ -61,17 +58,16 @@ export default defineComponent({
     const handleFinishFailed = (errors: ValidateErrorEntity<userMsg>) => {
       console.log(errors);
     };
-    const toRegister = () => {
+    const toLogin = () => {
       router.push({
-        name: "register",
-      });
-    };
+        name:'login'
+      })
+    }
     return {
       formState,
       handleFinish,
       handleFinishFailed,
-      toRegister,
-      checked: ref(false),
+      toLogin
     };
   },
   components: {
@@ -86,7 +82,7 @@ export default defineComponent({
   top: calc(50% - 145px);
   left: calc(50% - 136px);
 }
-.jump_btn {
-  cursor: pointer;
+.jump_btn{
+    cursor: pointer;
 }
 </style>

@@ -11,11 +11,11 @@
  }
  
  let MYSQL_CONF = {
-     host: 'localhost',
+     host: '127.0.0.1',
      user: 'root',
-     password: 'Mysql_2021',
+     password: '123456',
      port: '3306',
-     database: 'longmarch_db'
+     database: 'long_march_db'
  }
  
  if (isProd) {
