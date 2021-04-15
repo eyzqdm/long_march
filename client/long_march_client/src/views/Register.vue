@@ -6,7 +6,7 @@
       @finishFailed="handleFinishFailed"
     >
       <a-form-item>
-        <a-input v-model:value="formState.phone" placeholder="Username">
+        <a-input v-model:value="formState.phone" placeholder="" @pressEnter="checkIsExist">
           <template #prefix
             ><UserOutlined style="color: rgba(0, 0, 0, 0.25)"
           /></template>
@@ -55,6 +55,11 @@ export default defineComponent({
       console.log(formState.phone);
       LoginApi.login({ ...formState });
     };
+    const checkIsExist = async(e:string) => {
+        const res =  await LoginApi.isExist(e)
+        console.log(res);
+        
+    }
     const handleFinishFailed = (errors: ValidateErrorEntity<userMsg>) => {
       console.log(errors);
     };
@@ -67,12 +72,13 @@ export default defineComponent({
       formState,
       handleFinish,
       handleFinishFailed,
-      toLogin
+      toLogin,
+      checkIsExist
     };
   },
   components: {
     UserOutlined,
-    LockOutlined,
+    LockOutlined, 
   },
 });
 </script>
