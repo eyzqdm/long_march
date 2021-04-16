@@ -17,7 +17,7 @@ service.interceptors.request.use(
         // // 自定义令牌的字段名为X-Token，根据咱们后台再做修改
         // config.headers["X-Token"] = store.getters.token;
         // }
-        config.headers["X-Token"] = "my token";
+      //  config.headers["X-Token"] = "my token";
         return config;
     },
     (error) => {
@@ -77,7 +77,7 @@ service.interceptors.response.use(
     }
 );
 export function request(data:any) {
-    return axios(data)
+    return service(data)
 }
 export function get(url:string, params:any) {
     return request({

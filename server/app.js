@@ -18,21 +18,21 @@ const { SESSION_SECRET_KEY } = require("./src/conf/secretKeys");
 const config = require("./config");
 const routes = require("./routes");
 
+// 路由
+const userAPI = require("./src/api/user");
+
 const port = process.env.PORT || config.port;
 
 // error handler
 onerror(app);
 
 // middlewares
-app.use(async (ctx, next) => {
-  ctx.set("Access-Control-Allow-Origin", "*");
-  ctx.set(
-    "Access-Control-Allow-Headers",
-    "Content-Type, Content-Length, Authorization, Accept, X-Requested-With , yourHeaderFeild"
-  );
-  ctx.set("Access-Control-Allow-Methods", "PUT, POST, GET, DELETE, OPTIONS");
-  if (ctx.method == "OPTIONS") {
-    ctx.body = 200;
+app.use(async (ctx, next)=> {
+  ctx.set('Access-Control-Allow-Origin', '*');
+  ctx.set('Access-Control-Allow-Headers', 'Content-Type, Content-Length, Authorization, Accept, X-Requested-With , yourHeaderFeild');
+  ctx.set('Access-Control-Allow-Methods', 'PUT, POST, GET, DELETE, OPTIONS');
+  if (ctx.method == 'OPTIONS') {
+    ctx.body = 200; 
   } else {
     await next();
   }
@@ -67,6 +67,7 @@ app
     })
   )
   .use(router.routes())
+  .use(userAPI.routes(),userAPI.allowedMethods())
   .use(router.allowedMethods());
 
 // logger
