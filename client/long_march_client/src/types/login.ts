@@ -1,4 +1,4 @@
 export interface userMsg {
-    phone:number,
+    userName:string,
     password:string
   }

@@ -4,15 +4,17 @@
       :model="formState"
       @finish="handleFinish"
       @finishFailed="handleFinishFailed"
+      :label-col="labelCol"
+      :wrapper-col="wrapperCol"
     >
-      <a-form-item>
-        <a-input v-model:value="formState.phone" placeholder="Username">
+      <a-form-item label="用户名">
+        <a-input v-model:value="formState.phone" placeholder="">
           <template #prefix
             ><UserOutlined style="color: rgba(0, 0, 0, 0.25)"
           /></template>
         </a-input>
       </a-form-item>
-      <a-form-item>
+      <a-form-item label="密码">
         <a-input
           v-model:value="formState.password"
           type="password"
@@ -67,6 +69,8 @@ export default defineComponent({
       });
     };
     return {
+      labelCol: { span:4 },
+      wrapperCol: { span: 16 },
       formState,
       handleFinish,
       handleFinishFailed,

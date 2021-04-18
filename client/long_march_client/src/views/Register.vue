@@ -4,19 +4,36 @@
       :model="formState"
       @finish="handleFinish"
       @finishFailed="handleFinishFailed"
+      :label-col="labelCol"
+      :wrapper-col="wrapperCol"
     >
-      <a-form-item>
-        <a-input v-model:value="formState.phone" placeholder="Username">
+      <a-form-item label="用户名"> 
+        <a-input
+          v-model:value="formState.userName"
+          placeholder=""
+          @pressEnter="checkIsExist"
+        >
           <template #prefix
             ><UserOutlined style="color: rgba(0, 0, 0, 0.25)"
           /></template>
         </a-input>
       </a-form-item>
-      <a-form-item>
+      <a-form-item label="密码">
         <a-input
           v-model:value="formState.password"
           type="password"
-          placeholder="Password"
+          placeholder=""
+        >
+          <template #prefix
+            ><LockOutlined style="color: rgba(0, 0, 0, 0.25)"
+          /></template>
+        </a-input>
+      </a-form-item>
+       <a-form-item label="确认密码">
+        <a-input
+          v-model:value="formState.password"
+          type="password"
+          placeholder=""
         >
           <template #prefix
             ><LockOutlined style="color: rgba(0, 0, 0, 0.25)"
@@ -27,7 +44,7 @@
         <a-button
           type="primary"
           html-type="submit"
-          :disabled="formState.user === '' || formState.password === ''"
+          :disabled="formState.userName === '' || formState.password === ''"
         >
           注册
         </a-button>
@@ -48,26 +65,34 @@ export default defineComponent({
   setup() {
     const router = useRouter();
     const formState: UnwrapRef<userMsg> = reactive({
-      phone: "",
+      userName: "",
       password: "",
     });
     const handleFinish = () => {
-      console.log(formState.phone);
+      console.log(formState.userName);
       LoginApi.login({ ...formState });
+    };
+    const checkIsExist = async (e: string) => {
+      const res = await LoginApi.isExist({
+        userName:formState.userName
+      });
     };
     const handleFinishFailed = (errors: ValidateErrorEntity<userMsg>) => {
       console.log(errors);
     };
     const toLogin = () => {
       router.push({
-        name:'login'
-      })
-    }
+        name: "login",
+      });
+    };
     return {
+      labelCol: { span:6 },
+      wrapperCol: { span: 16 },
       formState,
       handleFinish,
       handleFinishFailed,
-      toLogin
+      toLogin,
+      checkIsExist,
     };
   },
   components: {
@@ -82,7 +107,7 @@ export default defineComponent({
   top: calc(50% - 145px);
   left: calc(50% - 136px);
 }
-.jump_btn{
-    cursor: pointer;
+.jump_btn {
+  cursor: pointer;
 }
 </style>

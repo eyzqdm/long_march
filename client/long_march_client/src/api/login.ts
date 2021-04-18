@@ -3,6 +3,9 @@ import { post} from '../utils/request'
 
 export default class LoginApi {
   static login (param:userMsg) {
-    return post('http://localhost:3000/login', param)
+    return post('/api/user/login', param)
+  }
+  static isExist (param:string) {
+    return post('/api/user/isExist', param)
   }
 }
