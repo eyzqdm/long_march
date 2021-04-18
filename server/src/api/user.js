@@ -4,7 +4,7 @@
  */
 
 const router = require("koa-router")();
-const { isExist } = require("../controller/user");
+const { isExist, login, register } = require("../controller/user");
 
 router.prefix("/api/user");
 
@@ -15,12 +15,18 @@ router.post("/isExist", async (ctx, next) => {
 });
 
 // 注册
-router.post('/register', genValidator(userValidate), async (ctx, next) => {
-  const { userName, password, gender } = ctx.request.body
+router.post("/register", genValidator(userValidate), async (ctx, next) => {
+  const { userName, password, gender } = ctx.request.body;
   ctx.body = await register({
-      userName,
-      password,
-      gender
-  })
-})
+    userName,
+    password,
+    gender,
+  });
+});
+
+// 登录
+router.post("/login", async (ctx, next) => {
+  const { userName, password } = ctx.request.body;
+  ctx.body = await login(ctx, userName, password);
+});
 module.exports = router;
