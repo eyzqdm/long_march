@@ -5,7 +5,10 @@
 
 const { getUserInfo, createUser } = require("../services/user");
 const { SuccessModel, ErrorModel } = require("../model/ResModel");
-const { registerUserNameNotExistInfo } = require("../model/ErrorInfo");
+const {
+  registerUserNameNotExistInfo,
+  loginFailInfo,
+} = require("../model/ErrorInfo");
 const doCrypto = require("../utils/cryp"); // 加密模块
 
 /**
@@ -62,15 +65,15 @@ async function login(ctx, userName, password) {
     return new ErrorModel(loginFailInfo);
   }
 
-  // 登录成功
+  /* // 登录成功
   if (ctx.session.userInfo == null) {
     ctx.session.userInfo = userInfo;
-  }
-  return new SuccessModel();
+  } */
+  return new SuccessModel(userInfo);
 }
 
 module.exports = {
   isExist,
   register,
-  login
+  login,
 };

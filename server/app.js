@@ -7,6 +7,7 @@ const redisStore = require("koa-redis");
 const views = require("koa-views");
 const co = require("co");
 const convert = require("koa-convert");
+const jwtKoa = require('koa-jwt')
 const json = require("koa-json");
 const onerror = require("koa-onerror");
 const bodyparser = require("koa-bodyparser");
@@ -17,6 +18,8 @@ const { REDIS_CONF } = require("./src/conf/db"); // redis 端口配置
 const { SESSION_SECRET_KEY } = require("./src/conf/secretKeys");
 const config = require("./config");
 const routes = require("./routes");
+
+const { SECRET } =  require('./src/conf/constant')
 
 // 路由
 const userAPI = require("./src/api/user");
@@ -38,7 +41,7 @@ app.use(async (ctx, next)=> {
   }
 });
 // session 配置
-app.keys = [SESSION_SECRET_KEY];
+/* app.keys = [SESSION_SECRET_KEY];
 app.use(
   session({
     key: "weibo.sid", // cookie name 默认是 `koa.sid` 用户传过来的
@@ -53,7 +56,14 @@ app.use(
       all: `${REDIS_CONF.host}:${REDIS_CONF.port}`,
     }),
   })
-);
+
+); */
+
+app.use(jwtKoa({
+  secret:SECRET
+}).unless({
+  path:[/^\/api\/user/]
+}))
 app
   .use(bodyparser())
   .use(json())

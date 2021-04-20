@@ -67,10 +67,11 @@ export default defineComponent({
     const formState: UnwrapRef<userMsg> = reactive({
       userName: "",
       password: "",
+      gender:0
     });
     const handleFinish = () => {
       console.log(formState.userName);
-      LoginApi.login({ ...formState });
+      LoginApi.Register({ ...formState });
     };
     const checkIsExist = async (e: string) => {
       const res = await LoginApi.isExist({
