@@ -5,7 +5,10 @@
 
 const router = require("koa-router")();
 const { isExist, login, register } = require("../controller/user");
-
+const { genValidator } = require("../middlewares/validator");
+const userValidate = require("../validator/user");
+const jwt = require("jsonwebtoken");
+const { SECRET } = require("../conf/constant");
 router.prefix("/api/user");
 
 // 用户名是否存在
@@ -27,6 +30,26 @@ router.post("/register", genValidator(userValidate), async (ctx, next) => {
 // 登录
 router.post("/login", async (ctx, next) => {
   const { userName, password } = ctx.request.body;
-  ctx.body = await login(ctx, userName, password);
+  const res = await login(ctx, userName, password);
+  console.log("res");
+  console.log(res);
+  const { id } = res;
+  let token = jwt.sign(
+    {
+      id,
+      userName,
+    },
+    "token",
+    { expiresIn: "1h" }
+  );
+  ctx.body = {
+    ...res,
+    token,
+  };
+  /*
+  1 koa-jwt 如何限制路由
+  2 自己写token中间件？
+  3 完成登录 
+   */
 });
 module.exports = router;

@@ -8,4 +8,7 @@ export default class LoginApi {
   static isExist (param:string) {
     return post('/api/user/isExist', param)
   }
+  static Register (param:string) {
+    return post('/api/user/register', param)
+  }
 }
