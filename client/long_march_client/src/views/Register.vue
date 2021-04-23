@@ -7,7 +7,7 @@
       :label-col="labelCol"
       :wrapper-col="wrapperCol"
     >
-      <a-form-item label="用户名"> 
+      <a-form-item label="用户名">
         <a-input
           v-model:value="formState.userName"
           placeholder=""
@@ -29,9 +29,9 @@
           /></template>
         </a-input>
       </a-form-item>
-       <a-form-item label="确认密码">
+      <a-form-item label="确认密码">
         <a-input
-          v-model:value="formState.password"
+          v-model:value="formState.newPassword"
           type="password"
           placeholder=""
         >
@@ -39,6 +39,12 @@
             ><LockOutlined style="color: rgba(0, 0, 0, 0.25)"
           /></template>
         </a-input>
+      </a-form-item>
+      <a-form-item label="确认密码">
+        <a-radio-group name="radioGroup" v-model:value="formState.gender">
+          <a-radio value=1>男</a-radio>
+          <a-radio value=2>女</a-radio>
+        </a-radio-group>
       </a-form-item>
       <a-form-item>
         <a-button
@@ -67,7 +73,12 @@ export default defineComponent({
     const formState: UnwrapRef<userMsg> = reactive({
       userName: "",
       password: "",
-      gender:0
+      nickName:'asdda',
+      confPassword: "",
+      newPassword:'',
+      gender: 1,
+      picture:'picture',
+      city:'shanghai'
     });
     const handleFinish = () => {
       console.log(formState.userName);
@@ -75,7 +86,7 @@ export default defineComponent({
     };
     const checkIsExist = async (e: string) => {
       const res = await LoginApi.isExist({
-        userName:formState.userName
+        userName: formState.userName,
       });
     };
     const handleFinishFailed = (errors: ValidateErrorEntity<userMsg>) => {
@@ -87,7 +98,7 @@ export default defineComponent({
       });
     };
     return {
-      labelCol: { span:6 },
+      labelCol: { span: 6 },
       wrapperCol: { span: 16 },
       formState,
       handleFinish,

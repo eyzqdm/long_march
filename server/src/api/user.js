@@ -18,17 +18,14 @@ router.post("/isExist", async (ctx, next) => {
 });
 
 // 注册
-router.post(
-  "/register",
-  /* genValidator(userValidate) */ async (ctx, next) => {
-    const { userName, password, gender } = ctx.request.body;
-    ctx.body = await register({
-      userName,
-      password,
-      gender,
-    });
-  }
-);
+router.post("/register", genValidator(userValidate), async (ctx, next) => {
+  const { userName, password, gender } = ctx.request.body;
+  ctx.body = await register({
+    userName,
+    password,
+    gender,
+  });
+});
 
 // 登录
 router.post("/login", async (ctx, next) => {

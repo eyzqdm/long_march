@@ -23,6 +23,7 @@ const { SECRET } =  require('./src/conf/constant')
 
 // 路由
 const userAPI = require("./src/api/user");
+const testAPI = require("./src/api/testToken");
 
 const port = process.env.PORT || config.port;
 
@@ -78,6 +79,7 @@ app
   )
   .use(router.routes())
   .use(userAPI.routes(),userAPI.allowedMethods())
+  .use(testAPI.routes(),testAPI.allowedMethods())
   .use(router.allowedMethods());
 
 // logger
