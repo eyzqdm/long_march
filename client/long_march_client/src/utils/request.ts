@@ -13,11 +13,10 @@ const service = axios.create({
 service.interceptors.request.use(
     (config) => {
         // 指定请求令牌
-        // if (store.getters.token) {
-        // // 自定义令牌的字段名为X-Token，根据咱们后台再做修改
-        // config.headers["X-Token"] = store.getters.token;
-        // }
-      //  config.headers["X-Token"] = "my token";
+        const token = sessionStorage.getItem('token')
+        if (token) {
+            config.headers["Authorization"] = 'Bearer' + token
+        }
         return config;
     },
     (error) => {
@@ -42,7 +41,7 @@ service.interceptors.response.use(
         const res = response.data;
 
         // 如果状态码不是20000则认为有错误
-        if (res.code !== 200) {
+        if (res.code !== 0) {
             message.error({
                 message: res.message || "Error",
                 duration: 5 * 1000,
@@ -76,10 +75,10 @@ service.interceptors.response.use(
         return Promise.reject(error);
     }
 );
-export function request(data:any) {
+export function request(data: any) {
     return service(data)
 }
-export function get(url:string, params:any) {
+export function get(url: string, params: any) {
     return request({
         url: url,
         params: params,
@@ -87,7 +86,7 @@ export function get(url:string, params:any) {
     })
 }
 
-export function post(url:string, params:any) {
+export function post(url: string, params: any) {
     return request({
         url: url,
         data: params,

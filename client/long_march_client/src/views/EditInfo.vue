@@ -1,6 +1,5 @@
 <template>
-  <div class="long_march">Long March</div>
-  <div class="title">用户注册</div>
+<div>个人信息设置</div>
   <div class="login_form">
     <a-form
       :model="formState"
@@ -206,25 +205,6 @@ export default defineComponent({
 });
 </script>
 <style scoped lang="less">
-.long_march {
-  position: fixed;
-  top: 20%;
-  left: 40%;
-  width: 350px;
-  text-align: center;
-  font-size: 50px;
-  color: #7497c2;
-  border: 2px solid #7497c2;
-}
-.title{
-   position: fixed;
-  top: 30%;
-  left: 40%;
-  width: 350px;
-  text-align: center;
-  font-size: 20px;
-  color: #7497c2;
-}
 .login_form {
   position: absolute;
   top: calc(50% - 145px);

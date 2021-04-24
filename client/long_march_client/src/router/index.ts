@@ -4,6 +4,7 @@ import Login from "views/Login.vue"
 export const routes = [
   {
     path: "/",
+    name:'home',
     component: Layout,
   },
   {
@@ -15,6 +16,11 @@ export const routes = [
     path: "/register",
     name:'register',
     component: ()=>import('views/Register.vue'),
+  },
+  {
+    path: "/edit",
+    name:'edit',
+    component: ()=>import('views/EditInfo.vue'),
   }
 ];
 

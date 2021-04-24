@@ -31,8 +31,6 @@ router.post("/register", genValidator(userValidate), async (ctx, next) => {
 router.post("/login", async (ctx, next) => {
   const { userName, password } = ctx.request.body;
   const res = await login(ctx, userName, password);
-  console.log("res");
-  console.log(res);
   const { id } = res;
   let token = jwt.sign(
     {
@@ -44,7 +42,7 @@ router.post("/login", async (ctx, next) => {
   );
   ctx.body = {
     ...res,
-    token,
+    token: res.code === 0 ? token : "",
   };
   /*
   1 koa-jwt 如何限制路由

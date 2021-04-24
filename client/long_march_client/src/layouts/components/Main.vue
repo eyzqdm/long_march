@@ -1,5 +1,5 @@
 <template>
-  <div>身子</div>
+  <div>Long March</div>
 </template>
 
 <script>

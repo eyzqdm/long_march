@@ -1,4 +1,6 @@
 <template>
+  <div class="long_march">Long March</div>
+  <div class="title">用户名密码登录</div>
   <div class="login_form">
     <a-form
       :model="formState"
@@ -40,17 +42,16 @@
     </div>
     <span class="jump_btn" @click="toRegister">没有账号？立即注册</span>
   </div>
-  <div @click="changeNum">{{num}}</div>
-  <test></test>
+  <div @click="changeNum">{{ num }}</div>
 </template>
 <script lang="ts">
 import { UserOutlined, LockOutlined } from "@ant-design/icons-vue";
-import Test from '../components/Test.vue'
 import { ValidateErrorEntity } from "ant-design-vue/es/form/interface";
 import { defineComponent, reactive, UnwrapRef, ref, inject } from "vue";
 import { useRouter } from "vue-router";
 import { userMsg } from "type/login";
 import LoginApi from "api/login";
+import { message } from "ant-design-vue";
 
 export default defineComponent({
   setup() {
@@ -59,8 +60,18 @@ export default defineComponent({
       userName: "",
       password: "",
     });
-    const handleFinish = () => {
-      LoginApi.login({ ...formState });
+    const handleFinish = async () => {
+      const { code, message: msg, data: res } = await LoginApi.login({
+        ...formState,
+      });
+      console.log(code);
+      if (code === 0) {
+        message.success("登陆成功");
+        sessionStorage.setItem("token", res.token);
+        router.push("/");
+      } else {
+        message.warning(msg);
+      }
     };
     const handleFinishFailed = (errors: ValidateErrorEntity<userMsg>) => {
       console.log(errors);
@@ -70,10 +81,10 @@ export default defineComponent({
         name: "register",
       });
     };
-    const useNum = inject('test')
-    const {changeNum,num} = useNum
+    const useNum = inject("test");
+    const { changeNum, num } = useNum;
     console.log(changeNum);
-      
+
     return {
       labelCol: { span: 4 },
       wrapperCol: { span: 16 },
@@ -83,17 +94,35 @@ export default defineComponent({
       toRegister,
       checked: ref(false),
       changeNum,
-      num
+      num,
     };
   },
   components: {
     UserOutlined,
     LockOutlined,
-    Test
   },
 });
 </script>
 <style scoped lang="less">
+.long_march {
+  position: fixed;
+  top: 20%;
+  left: 40%;
+  width: 350px;
+  text-align: center;
+  font-size: 50px;
+  color: #7497c2;
+  border: 2px solid #7497c2;
+}
+.title{
+   position: fixed;
+  top: 30%;
+  left: 40%;
+  width: 350px;
+  text-align: center;
+  font-size: 20px;
+  color: #7497c2;
+}
 .login_form {
   position: absolute;
   top: calc(50% - 145px);

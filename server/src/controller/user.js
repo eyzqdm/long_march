@@ -7,6 +7,8 @@ const { getUserInfo, createUser } = require("../services/user");
 const { SuccessModel, ErrorModel } = require("../model/ResModel");
 const {
   registerUserNameNotExistInfo,
+  registerUserNameExistInfo,
+  registerFailInfo,
   loginFailInfo,
 } = require("../model/ErrorInfo");
 const doCrypto = require("../utils/cryp"); // 加密模块
@@ -69,7 +71,10 @@ async function login(ctx, userName, password) {
   if (ctx.session.userInfo == null) {
     ctx.session.userInfo = userInfo;
   } */
-  return new SuccessModel(userInfo);
+  return new SuccessModel({
+    data:userInfo,
+    message:'登录成功'
+  });
 }
 
 module.exports = {

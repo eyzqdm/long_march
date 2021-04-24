@@ -7,42 +7,40 @@
  * 基础模块
  */
 class BaseModel {
-    constructor({errno, data, message}) {
-        this.errno = errno
-        if (data) {
-            this.data = data
-        }
-        if (message) {
-            this.message = message
-        }
+  constructor({ code, data, message }) {
+    this.code = code;
+    if (data) {
+      this.data = data;
     }
+    if (message) {
+      this.message = message;
+    }
+  }
 }
 
 /**
  * 成功的数据模型
  */
 class SuccessModel extends BaseModel {
-    constructor(data = {}) {
-        super({
-            errno: 0,
-            data
-        })
-    }
+  constructor({data, message}) {
+    super({
+      code: 0,
+      message,
+      data:{...data},
+    });
+  }
 }
 
 /**
  * 失败的数据模型
  */
 class ErrorModel extends BaseModel {
-    constructor({ errno, message }) {
-        super({
-            errno,
-            message
-        })
-    }
+  constructor(message) {
+    super(message);
+  }
 }
 
 module.exports = {
-    SuccessModel,
-    ErrorModel
-}
+  SuccessModel,
+  ErrorModel,
+};

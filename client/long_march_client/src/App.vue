@@ -1,6 +1,5 @@
 <template>
 <div>
-<div @click="changeNum">num:{{num}}</div>
   <router-view></router-view>
 </div>
 </template>

@@ -2,9 +2,23 @@
  * @description user service
  * @author eyz
  */
+const jwt = require("jsonwebtoken");
+const util = require('util')
+const verify = util.promisify(jwt.verify)
 
 const { User } = require("../db/model/index");
 const { formatUser } = require("./_format");
+
+async function getUserInfoByToken(token,secret){
+   
+  try {
+    const payload = await verify(token,secret)
+    return payload
+  } catch (error) {
+    return error
+  }
+
+}
 
 /**
  * 获取用户信息
@@ -57,5 +71,6 @@ async function createUser({ userName, password, gender = 3, nickName }) {
 
 module.exports = {
   getUserInfo,
-  createUser
+  createUser,
+  getUserInfoByToken
 };
