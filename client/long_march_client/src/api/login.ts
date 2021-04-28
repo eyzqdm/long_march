@@ -11,4 +11,7 @@ export default class LoginApi {
   static Register (param:string) {
     return post('/api/user/register', param)
   }
+  static getUserInfo (param:string) {
+    return post('/api/user/getUserInfo', param)
+  }
 }

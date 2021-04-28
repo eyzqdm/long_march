@@ -2,16 +2,36 @@
  * @description user controller
  * @author eyz
  */
-
-const { getUserInfo, createUser } = require("../services/user");
+ const jwt = require("jsonwebtoken");
+ const util = require('util')
+ const verify = util.promisify(jwt.verify)
+const {
+  getUserInfo,
+  createUser,
+  deleteUser,
+  updateUser,
+} = require("../services/user");
 const { SuccessModel, ErrorModel } = require("../model/ResModel");
 const {
   registerUserNameNotExistInfo,
   registerUserNameExistInfo,
   registerFailInfo,
   loginFailInfo,
+  deleteUserFailInfo,
+  changeInfoFailInfo,
+  changePasswordFailInfo,
 } = require("../model/ErrorInfo");
 const doCrypto = require("../utils/cryp"); // 加密模块
+
+async function getUserInfoByToken(token, secret) {
+  try {
+    const payload = await verify(token, secret);
+    return payload;
+  } catch (error) {
+    return error;
+  }
+}
+
 
 /**
  * 用户名是否存在
@@ -72,13 +92,87 @@ async function login(ctx, userName, password) {
     ctx.session.userInfo = userInfo;
   } */
   return new SuccessModel({
-    data:userInfo,
-    message:'登录成功'
+    data: userInfo,
+    message: "登录成功",
   });
+}
+
+/**
+ * 删除当前用户
+ * @param {string} userName 用户名
+ */
+async function deleteCurUser(userName) {
+  const result = await deleteUser(userName);
+  if (result) {
+    // 成功
+    return new SuccessModel();
+  }
+  // 失败
+  return new ErrorModel(deleteUserFailInfo);
+}
+
+/**
+ * 修改个人信息
+ * @param {Object} ctx ctx
+ * @param {string} nickName 昵称
+ * @param {string} city 城市
+ * @param {string} picture 头像
+ */
+async function changeInfo(ctx, { nickName, city, picture }) {
+  const { userName } = ctx.session.userInfo;
+  if (!nickName) {
+    nickName = userName;
+  }
+
+  const result = await updateUser(
+    {
+      newNickName: nickName,
+      newCity: city,
+      newPicture: picture,
+    },
+    { userName }
+  );
+  if (result) {
+    // 执行成功
+    Object.assign(ctx.session.userInfo, {
+      nickName,
+      city,
+      picture,
+    });
+    // 返回
+    return new SuccessModel();
+  }
+  // 失败
+  return new ErrorModel(changeInfoFailInfo);
+}
+
+/**
+ * 修改密码
+ * @param {string} userName 用户名
+ * @param {string} password 当前密码
+ * @param {string} newPassword 新密码
+ */
+async function changePassword(userName, password, newPassword) {
+  const result = await updateUser(
+    {
+      newPassword: doCrypto(newPassword),
+    },
+    {
+      userName,
+      password: doCrypto(password),
+    }
+  );
+  if (result) {
+    // 成功
+    return new SuccessModel();
+  }
+  // 失败
+  return new ErrorModel(changePasswordFailInfo);
 }
 
 module.exports = {
   isExist,
   register,
   login,
+  getUserInfoByToken
 };

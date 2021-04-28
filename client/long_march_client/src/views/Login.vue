@@ -61,13 +61,14 @@ export default defineComponent({
       password: "",
     });
     const handleFinish = async () => {
-      const { code, message: msg, data: res } = await LoginApi.login({
+      const { code, message: msg, data: res,token } = await LoginApi.login({
         ...formState,
       });
       console.log(code);
       if (code === 0) {
         message.success("登陆成功");
-        sessionStorage.setItem("token", res.token);
+        sessionStorage.setItem("token", token);
+        console.log(token);
         router.push("/");
       } else {
         message.warning(msg);

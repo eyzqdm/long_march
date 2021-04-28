@@ -110,6 +110,7 @@ interface FileInfo {
 
 export default defineComponent({
   setup() {
+    LoginApi.getUserInfo()
     const router = useRouter();
     const formState: UnwrapRef<userMsg> = reactive({
       userName: "",

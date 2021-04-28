@@ -81,7 +81,7 @@ app
   )
   .use(
     jwtKoa({
-      secret: SECRET,
+      secret:SECRET
     }).unless({
       // 无需验证的api
       path: [/^\/api\/user\/login/,/^\/api\/user\/register/],
